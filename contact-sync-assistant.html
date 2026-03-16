@@ -363,7 +363,7 @@ function handleSubmit() {
     if (!newEmail) { showBanner('Please enter the new email address.', 'error'); return; }
     if (!re.test(newEmail)) { showBanner('New email doesn\'t look valid. Please check and try again.', 'error'); return; }
     if (currentEmail.toLowerCase() === newEmail.toLowerCase()) { showBanner('Current and new email are the same. Please check and try again.', 'error'); return; }
-    pendingPayload = { oldEmail: currentEmail, newEmail, notes: val('notes') };
+    pendingPayload = { oldEmail: currentEmail, newEmail, notes: val('notes'), changeType: 'email' };
 
   } else {
     const fields = {
@@ -378,7 +378,7 @@ function handleSubmit() {
     };
     const hasChange = Object.values(fields).some(v => v !== '');
     if (!hasChange) { showBanner('Please fill in at least one field to update.', 'error'); return; }
-    pendingPayload = { oldEmail: currentEmail, newEmail: currentEmail, notes: val('notes'), ...fields };
+    pendingPayload = { oldEmail: currentEmail, newEmail: currentEmail, notes: val('notes'), changeType: 'details', ...fields };
   }
 
   showConfirm();
