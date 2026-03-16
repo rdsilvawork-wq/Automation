@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Contact Sync — Woodsford</title>
+<style>
+  @import url('https://fonts.googleapis.com/css2?family=DM+Mono:ital,wght@0,300;0,400;0,500;1,300&family=DM+Sans:opsz,wght@9..40,300;9..40,400;9..40,500&display=swap');
+
+  :root {
+    --bg: #0f0f0f;
+    --surface: #161616;
+    --surface-2: #1c1c1c;
+    --border: #262626;
+    --border-light: #303030;
+    --text: #e2e2e2;
+    --text-muted: #606060;
+    --text-dim: #3a3a3a;
+    --accent: #c8a96e;
+    --accent-dim: rgba(200, 169, 110, 0.1);
+    --accent-border: rgba(200, 169, 110, 0.3);
+    --success: #5a9e7a;
+    --success-dim: rgba(90, 158, 122, 0.1);
+    --success-border: rgba(90, 158, 122, 0.4);
+    --error: #c26e6e;
+    --error-dim: rgba(194, 110, 110, 0.1);
+    --error-border: rgba(194, 110, 110, 0.4);
+    --font-mono: 'DM Mono', monospace;
+    --font-sans: 'DM Sans', sans-serif;
+  }
+
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: var(--font-sans);
+    font-size: 14px;
+    min-height: 100vh;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    justify-content: center;
+    padding: 24px;
+  }
+
+  .container {
+    width: 100%;
+    max-width: 480px;
+  }
+
+  .header {
+    display: flex;
+    align-items: center;
+    justify-content: space-between;
+    padding-bottom: 24px;
+    border-bottom: 1px solid var(--border);
+    margin-bottom: 32px;
+  }
+
+  .header-left { display: flex; align-items: center; gap: 12px; }
+
+  .logo {
+    width: 32px; height: 32px;
+    border: 1px solid var(--accent-border);
+    display: flex; align-items: center; justify-content: center;
+    font-family: var(--font-mono); font-size: 11px;
+    color: var(--accent); letter-spacing: 0.05em; flex-shrink: 0;
+  }
+
+  .header-text { display: flex; flex-direction: column; gap: 2px; }
+  .header-title { font-size: 14px; font-weight: 500; letter-spacing: -0.01em; }
+  .header-sub { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.06em; text-transform: uppercase; }
+
+  .status { display: flex; align-items: center; gap: 6px; font-family: var(--font-mono); font-size: 10px; color: var(--success); letter-spacing: 0.05em; text-transform: uppercase; }
+  .status-dot { width: 5px; height: 5px; border-radius: 50%; background: var(--success); animation: pulse 2.5s ease-in-out infinite; }
+  @keyframes pulse { 0%,100%{opacity:1;} 50%{opacity:0.4;} }
+
+  .form { display: flex; flex-direction: column; gap: 20px; }
+
+  .field { display: flex; flex-direction: column; gap: 8px; }
+
+  .field-label { display: flex; align-items: baseline; justify-content: space-between; }
+  .label-text { font-family: var(--font-mono); font-size: 10px; color: var(--text-muted); letter-spacing: 0.08em; text-transform: uppercase; }
+  .label-hint { font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); font-style: italic; }
+
+  input[type="email"], input[type="text"], textarea {
+    background: var(--surface);
+    border: 1px solid var(--border-light);
+    color: var(--text);
+    font-family: var(--font-mono);
+    font-size: 12.5px;
+    padding: 11px 14px;
+    outline: none;
+    width: 100%;
+    transition: border-color 0.15s ease, background 0.15s ease;
+    letter-spacing: 0.01em;
+  }
+
+  input:focus, textarea:focus {
+    border-color: var(--accent-border);
+    background: var(--surface-2);
+  }
+
+  input::placeholder, textarea::placeholder { color: var(--text-dim); font-style: italic; }
+
+  textarea { resize: none; height: 72px; line-height: 1.6; font-size: 12px; }
+
+  .toggle-group { display: flex; border: 1px solid var(--border-light); overflow: hidden; }
+  .toggle-option {
+    flex: 1; padding: 9px 12px; background: transparent; border: none;
+    color: var(--text-muted); font-family: var(--font-mono); font-size: 10px;
+    letter-spacing: 0.07em; text-transform: uppercase; cursor: pointer;
+    transition: all 0.15s ease; text-align: center;
+  }
+  .toggle-option:not(:last-child) { border-right: 1px solid var(--border-light); }
+  .toggle-option.active { background: var(--accent-dim); color: var(--accent); }
+  .toggle-option:hover:not(.active) { background: var(--surface-2); color: var(--text); }
+
+  .divider { display: flex; align-items: center; gap: 12px; margin: 2px 0; }
+  .divider-line { flex: 1; height: 1px; background: var(--border); }
+  .divider-text { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
+
+  .submit-btn {
+    width: 100%; padding: 13px;
+    background: var(--accent-dim); border: 1px solid var(--accent-border);
+    color: var(--accent); font-family: var(--font-mono); font-size: 11px;
+    letter-spacing: 0.1em; text-transform: uppercase; cursor: pointer;
+    transition: all 0.2s ease; margin-top: 4px;
+    display: flex; align-items: center; justify-content: center; gap: 10px;
+  }
+  .submit-btn:hover:not(:disabled) { background: var(--accent); color: var(--bg); }
+  .submit-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+  .submit-btn .arrow { transition: transform 0.2s ease; }
+  .submit-btn:hover:not(:disabled) .arrow { transform: translateX(4px); }
+
+  .status-banner {
+    padding: 12px 16px; border: 1px solid;
+    font-family: var(--font-mono); font-size: 11px; letter-spacing: 0.03em;
+    line-height: 1.6; display: none; margin-top: 4px;
+    animation: fadeIn 0.3s ease;
+  }
+  @keyframes fadeIn { from{opacity:0;transform:translateY(-4px);} to{opacity:1;transform:translateY(0);} }
+  .status-banner.success { display:block; background:var(--success-dim); border-color:var(--success-border); color:var(--success); }
+  .status-banner.error { display:block; background:var(--error-dim); border-color:var(--error-border); color:var(--error); }
+  .status-banner.loading { display:block; background:var(--accent-dim); border-color:var(--accent-border); color:var(--accent); }
+
+  /* Confirm overlay */
+  .confirm-overlay {
+    display: none; position: fixed; inset: 0;
+    background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
+    z-index: 100; align-items: center; justify-content: center; padding: 24px;
+  }
+  .confirm-overlay.active { display: flex; animation: fadeIn 0.2s ease; }
+
+  .confirm-box {
+    background: var(--surface); border: 1px solid var(--border-light);
+    width: 100%; max-width: 400px; animation: slideUp 0.25s ease;
+  }
+  @keyframes slideUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
+
+  .confirm-header { padding: 14px 18px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
+  .confirm-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
+  .confirm-row { display: flex; gap: 12px; align-items: baseline; }
+  .confirm-key { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; min-width: 72px; flex-shrink: 0; }
+  .confirm-val { font-family: var(--font-mono); font-size: 12px; color: var(--text); word-break: break-all; line-height: 1.5; }
+  .confirm-val.strike { color: var(--error); text-decoration: line-through; opacity: 0.8; }
+  .confirm-val.highlight { color: var(--success); }
+
+  .confirm-footer { padding: 14px 18px; border-top: 1px solid var(--border); display: flex; gap: 10px; }
+  .btn-go { flex:1; padding:10px; background:var(--success-dim); border:1px solid var(--success-border); color:var(--success); font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.15s ease; }
+  .btn-go:hover { background:var(--success); color:var(--bg); }
+  .btn-back { flex:1; padding:10px; background:transparent; border:1px solid var(--border-light); color:var(--text-muted); font-family:var(--font-mono); font-size:10px; letter-spacing:0.08em; text-transform:uppercase; cursor:pointer; transition:all 0.15s ease; }
+  .btn-back:hover { border-color:var(--error-border); color:var(--error); }
+
+  .footer-note { margin-top: 24px; padding-top: 20px; border-top: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; color: var(--text-dim); line-height: 1.7; letter-spacing: 0.02em; }
+  .footer-note span { color: var(--text-muted); }
+</style>
+</head>
+<body>
+
+<div class="container">
+  <div class="header">
+    <div class="header-left">
+      <div class="logo">WG</div>
+      <div class="header-text">
+        <div class="header-title">Contact Sync</div>
+        <div class="header-sub">Master to Files</div>
+      </div>
+    </div>
+    <div class="status"><div class="status-dot"></div>Live</div>
+  </div>
+
+  <div class="form">
+
+    <div class="field">
+      <div class="field-label"><span class="label-text">Type of change</span></div>
+      <div class="toggle-group">
+        <button class="toggle-option active" data-type="email" onclick="setChangeType('email')">Email address</button>
+        <button class="toggle-option" data-type="details" onclick="setChangeType('details')">Name / Details</button>
+      </div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <span class="label-text">Current email</span>
+        <span class="label-hint" id="currentHint">as it appears in all files now</span>
+      </div>
+      <input type="email" id="currentEmail" placeholder="e.g. giovanni.barbi@blackrock.com" autocomplete="off" />
+    </div>
+
+    <div class="field" id="newEmailField">
+      <div class="field-label">
+        <span class="label-text">New email</span>
+        <span class="label-hint">updated address</span>
+      </div>
+      <input type="email" id="newEmail" placeholder="e.g. giovanni.barbi@blackrock.co.uk" autocomplete="off" />
+    </div>
+
+    <div class="divider">
+      <div class="divider-line"></div>
+      <div class="divider-text">What's changing</div>
+      <div class="divider-line"></div>
+    </div>
+
+    <div class="field">
+      <div class="field-label">
+        <span class="label-text">Change description</span>
+        <span class="label-hint">for the approver</span>
+      </div>
+      <textarea id="notes" placeholder="e.g. Update last name from Smith to Jones&#10;e.g. Correct account name to BlackRock UK"></textarea>
+    </div>
+
+    <button class="submit-btn" onclick="handleSubmit()">
+      <span>Review & send</span><span class="arrow">→</span>
+    </button>
+
+    <div class="status-banner" id="statusBanner"></div>
+
+  </div>
+
+  <div class="footer-note">
+    All changes require <span>approval</span> before taking effect. An approval request will be sent to the flow owner's inbox once submitted.
+  </div>
+</div>
+
+<!-- Confirm overlay -->
+<div class="confirm-overlay" id="confirmOverlay">
+  <div class="confirm-box">
+    <div class="confirm-header">Confirm update</div>
+    <div class="confirm-body" id="confirmBody"></div>
+    <div class="confirm-footer">
+      <button class="btn-back" onclick="closeConfirm()">← Go back</button>
+      <button class="btn-go" onclick="triggerFlow()">Confirm & send →</button>
+    </div>
+  </div>
+</div>
+
+<script>
+const FLOW_URL = "https://default67b800d6dcb84e429ae563bbb92b25.c5.environment.api.powerplatform.com:443/powerautomate/automations/direct/workflows/2a14f0af04f74949b6a49c3f245dc9e9/triggers/manual/paths/invoke?api-version=1&sp=%2Ftriggers%2Fmanual%2Frun&sv=1.0&sig=sGdbAJxfwawSpx3vLBrXexO8TfAV7zYAlEJavNxdpmM";
+
+let changeType = 'email';
+let pendingPayload = null;
+
+function setChangeType(type) {
+  changeType = type;
+  document.querySelectorAll('.toggle-option').forEach(b => b.classList.toggle('active', b.dataset.type === type));
+  document.getElementById('newEmailField').style.display = type === 'email' ? 'flex' : 'none';
+}
+
+function showBanner(msg, type) {
+  const b = document.getElementById('statusBanner');
+  b.className = `status-banner ${type}`;
+  b.innerHTML = msg;
+  b.scrollIntoView({ behavior: 'smooth', block: 'nearest' });
+}
+
+function hideBanner() {
+  document.getElementById('statusBanner').className = 'status-banner';
+}
+
+function esc(str) {
+  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function handleSubmit() {
+  hideBanner();
+  const currentEmail = document.getElementById('currentEmail').value.trim();
+  const newEmail = changeType === 'email' ? document.getElementById('newEmail').value.trim() : currentEmail;
+  const notes = document.getElementById('notes').value.trim();
+  const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+
+  if (!currentEmail) { showBanner('Please enter the contact\'s current email address.', 'error'); return; }
+  if (!re.test(currentEmail)) { showBanner('Current email doesn\'t look valid. Please check and try again.', 'error'); return; }
+  if (changeType === 'email') {
+    if (!newEmail) { showBanner('Please enter the new email address.', 'error'); return; }
+    if (!re.test(newEmail)) { showBanner('New email doesn\'t look valid. Please check and try again.', 'error'); return; }
+    if (currentEmail.toLowerCase() === newEmail.toLowerCase()) { showBanner('Current and new email are the same. Please check and try again.', 'error'); return; }
+  }
+  if (!notes) { showBanner('Please describe what\'s changing so the approver knows what to expect.', 'error'); return; }
+
+  pendingPayload = { oldEmail: currentEmail, newEmail, notes };
+  showConfirm();
+}
+
+function showConfirm() {
+  const { oldEmail, newEmail, notes } = pendingPayload;
+  const isEmail = changeType === 'email';
+
+  document.getElementById('confirmBody').innerHTML = `
+    <div class="confirm-row">
+      <span class="confirm-key">Change</span>
+      <span class="confirm-val">${isEmail ? 'Email address update' : 'Contact details update'}</span>
+    </div>
+    <div class="confirm-row">
+      <span class="confirm-key">${isEmail ? 'Current' : 'Contact'}</span>
+      <span class="confirm-val ${isEmail ? 'strike' : ''}">${esc(oldEmail)}</span>
+    </div>
+    ${isEmail ? `<div class="confirm-row">
+      <span class="confirm-key">New email</span>
+      <span class="confirm-val highlight">${esc(newEmail)}</span>
+    </div>` : ''}
+    <div class="confirm-row">
+      <span class="confirm-key">Notes</span>
+      <span class="confirm-val">${esc(notes)}</span>
+    </div>
+  `;
+  document.getElementById('confirmOverlay').classList.add('active');
+}
+
+function closeConfirm() {
+  document.getElementById('confirmOverlay').classList.remove('active');
+}
+
+async function triggerFlow() {
+  closeConfirm();
+  const { oldEmail, newEmail } = pendingPayload;
+  const btn = document.querySelector('.submit-btn');
+  btn.disabled = true;
+  showBanner('Sending to Power Automate...', 'loading');
+
+  try {
+    const res = await fetch(FLOW_URL, {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ oldEmail, newEmail })
+    });
+
+    if (res.ok || res.status === 202) {
+      showBanner('✓ Flow triggered. An approval request has been sent — check your inbox to confirm the change.', 'success');
+      document.getElementById('currentEmail').value = '';
+      document.getElementById('newEmail').value = '';
+      document.getElementById('notes').value = '';
+      pendingPayload = null;
+    } else {
+      showBanner(`✗ Flow returned an error (${res.status}). Please check Power Automate and try again.`, 'error');
+    }
+  } catch {
+    showBanner('✗ Could not reach Power Automate. Check your network connection and try again.', 'error');
+  }
+
+  btn.disabled = false;
+}
+</script>
+</body>
+</html>
