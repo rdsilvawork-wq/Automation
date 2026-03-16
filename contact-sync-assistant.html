@@ -121,6 +121,13 @@
   .divider-line { flex: 1; height: 1px; background: var(--border); }
   .divider-text { font-family: var(--font-mono); font-size: 9px; color: var(--text-dim); letter-spacing: 0.1em; text-transform: uppercase; white-space: nowrap; }
 
+  .field-grid { display: grid; grid-template-columns: 1fr 1fr; gap: 12px; }
+
+  .fields-hint {
+    font-family: var(--font-mono); font-size: 10px; color: var(--text-dim);
+    font-style: italic; line-height: 1.6; letter-spacing: 0.02em;
+  }
+
   .submit-btn {
     width: 100%; padding: 13px;
     background: var(--accent-dim); border: 1px solid var(--accent-border);
@@ -145,7 +152,6 @@
   .status-banner.error { display:block; background:var(--error-dim); border-color:var(--error-border); color:var(--error); }
   .status-banner.loading { display:block; background:var(--accent-dim); border-color:var(--accent-border); color:var(--accent); }
 
-  /* Confirm overlay */
   .confirm-overlay {
     display: none; position: fixed; inset: 0;
     background: rgba(0,0,0,0.75); backdrop-filter: blur(4px);
@@ -156,13 +162,14 @@
   .confirm-box {
     background: var(--surface); border: 1px solid var(--border-light);
     width: 100%; max-width: 400px; animation: slideUp 0.25s ease;
+    max-height: 90vh; overflow-y: auto;
   }
   @keyframes slideUp { from{opacity:0;transform:translateY(12px);} to{opacity:1;transform:translateY(0);} }
 
   .confirm-header { padding: 14px 18px; border-bottom: 1px solid var(--border); font-family: var(--font-mono); font-size: 10px; color: var(--accent); letter-spacing: 0.1em; text-transform: uppercase; }
   .confirm-body { padding: 18px; display: flex; flex-direction: column; gap: 12px; }
   .confirm-row { display: flex; gap: 12px; align-items: baseline; }
-  .confirm-key { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; min-width: 72px; flex-shrink: 0; }
+  .confirm-key { font-family: var(--font-mono); font-size: 9px; color: var(--text-muted); text-transform: uppercase; letter-spacing: 0.08em; min-width: 80px; flex-shrink: 0; }
   .confirm-val { font-family: var(--font-mono); font-size: 12px; color: var(--text); word-break: break-all; line-height: 1.5; }
   .confirm-val.strike { color: var(--error); text-decoration: line-through; opacity: 0.8; }
   .confirm-val.highlight { color: var(--success); }
@@ -204,17 +211,70 @@
     <div class="field">
       <div class="field-label">
         <span class="label-text">Current email</span>
-        <span class="label-hint" id="currentHint">as it appears in all files now</span>
+        <span class="label-hint">as it appears in all files now</span>
       </div>
       <input type="email" id="currentEmail" placeholder="e.g. giovanni.barbi@blackrock.com" autocomplete="off" />
     </div>
 
-    <div class="field" id="newEmailField">
-      <div class="field-label">
-        <span class="label-text">New email</span>
-        <span class="label-hint">updated address</span>
+    <!-- Email change fields -->
+    <div id="emailFields">
+      <div class="field">
+        <div class="field-label">
+          <span class="label-text">New email</span>
+          <span class="label-hint">updated address</span>
+        </div>
+        <input type="email" id="newEmail" placeholder="e.g. giovanni.barbi@blackrock.co.uk" autocomplete="off" />
       </div>
-      <input type="email" id="newEmail" placeholder="e.g. giovanni.barbi@blackrock.co.uk" autocomplete="off" />
+    </div>
+
+    <!-- Name / Details fields -->
+    <div id="detailsFields" style="display:none; flex-direction:column; gap:16px;">
+
+      <div class="fields-hint">Fill in only the fields that are changing — leave the rest blank.</div>
+
+      <div class="field-grid">
+        <div class="field">
+          <div class="field-label"><span class="label-text">First name</span></div>
+          <input type="text" id="firstName" placeholder="New value" autocomplete="off" />
+        </div>
+        <div class="field">
+          <div class="field-label"><span class="label-text">Last name</span></div>
+          <input type="text" id="lastName" placeholder="New value" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="label-text">Account name</span></div>
+        <input type="text" id="accountName" placeholder="New value" autocomplete="off" />
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <div class="field-label"><span class="label-text">Role</span></div>
+          <input type="text" id="role" placeholder="New value" autocomplete="off" />
+        </div>
+        <div class="field">
+          <div class="field-label"><span class="label-text">Type</span></div>
+          <input type="text" id="type" placeholder="New value" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field-grid">
+        <div class="field">
+          <div class="field-label"><span class="label-text">Mailing city</span></div>
+          <input type="text" id="mailingCity" placeholder="New value" autocomplete="off" />
+        </div>
+        <div class="field">
+          <div class="field-label"><span class="label-text">Mailing country</span></div>
+          <input type="text" id="mailingCountry" placeholder="New value" autocomplete="off" />
+        </div>
+      </div>
+
+      <div class="field">
+        <div class="field-label"><span class="label-text">Description</span></div>
+        <input type="text" id="description" placeholder="New value" autocomplete="off" />
+      </div>
+
     </div>
 
     <div class="divider">
@@ -225,8 +285,8 @@
 
     <div class="field">
       <div class="field-label">
-        <span class="label-text">Change description</span>
-        <span class="label-hint">for the approver</span>
+        <span class="label-text">Notes for approver</span>
+        <span class="label-hint">optional</span>
       </div>
       <textarea id="notes" placeholder="e.g. Update last name from Smith to Jones&#10;e.g. Correct account name to BlackRock UK"></textarea>
     </div>
@@ -265,7 +325,8 @@ let pendingPayload = null;
 function setChangeType(type) {
   changeType = type;
   document.querySelectorAll('.toggle-option').forEach(b => b.classList.toggle('active', b.dataset.type === type));
-  document.getElementById('newEmailField').style.display = type === 'email' ? 'flex' : 'none';
+  document.getElementById('emailFields').style.display = type === 'email' ? 'block' : 'none';
+  document.getElementById('detailsFields').style.display = type === 'details' ? 'flex' : 'none';
 }
 
 function showBanner(msg, type) {
@@ -280,32 +341,69 @@ function hideBanner() {
 }
 
 function esc(str) {
-  return str.replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+  return String(str).replace(/&/g,'&amp;').replace(/</g,'&lt;').replace(/>/g,'&gt;');
+}
+
+function val(id) {
+  const el = document.getElementById(id);
+  return el ? el.value.trim() : '';
 }
 
 function handleSubmit() {
   hideBanner();
-  const currentEmail = document.getElementById('currentEmail').value.trim();
-  const newEmail = changeType === 'email' ? document.getElementById('newEmail').value.trim() : currentEmail;
-  const notes = document.getElementById('notes').value.trim();
+  const currentEmail = val('currentEmail');
   const re = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
 
   if (!currentEmail) { showBanner('Please enter the contact\'s current email address.', 'error'); return; }
   if (!re.test(currentEmail)) { showBanner('Current email doesn\'t look valid. Please check and try again.', 'error'); return; }
+
   if (changeType === 'email') {
+    const newEmail = val('newEmail');
     if (!newEmail) { showBanner('Please enter the new email address.', 'error'); return; }
     if (!re.test(newEmail)) { showBanner('New email doesn\'t look valid. Please check and try again.', 'error'); return; }
     if (currentEmail.toLowerCase() === newEmail.toLowerCase()) { showBanner('Current and new email are the same. Please check and try again.', 'error'); return; }
-  }
-  if (!notes) { showBanner('Please describe what\'s changing so the approver knows what to expect.', 'error'); return; }
+    pendingPayload = { oldEmail: currentEmail, newEmail, notes: val('notes') };
 
-  pendingPayload = { oldEmail: currentEmail, newEmail, notes };
+  } else {
+    const fields = {
+      firstName: val('firstName'),
+      lastName: val('lastName'),
+      accountName: val('accountName'),
+      role: val('role'),
+      type: val('type'),
+      mailingCity: val('mailingCity'),
+      mailingCountry: val('mailingCountry'),
+      description: val('description')
+    };
+    const hasChange = Object.values(fields).some(v => v !== '');
+    if (!hasChange) { showBanner('Please fill in at least one field to update.', 'error'); return; }
+    pendingPayload = { oldEmail: currentEmail, newEmail: currentEmail, notes: val('notes'), ...fields };
+  }
+
   showConfirm();
 }
 
 function showConfirm() {
-  const { oldEmail, newEmail, notes } = pendingPayload;
+  const { oldEmail, newEmail, notes, firstName, lastName, accountName, role, type, mailingCity, mailingCountry, description } = pendingPayload;
   const isEmail = changeType === 'email';
+
+  const fieldLabels = [
+    ['First name', firstName],
+    ['Last name', lastName],
+    ['Account', accountName],
+    ['Role', role],
+    ['Type', type],
+    ['City', mailingCity],
+    ['Country', mailingCountry],
+    ['Description', description],
+  ];
+
+  const detailRows = !isEmail ? fieldLabels
+    .filter(([, v]) => v)
+    .map(([k, v]) => `<div class="confirm-row">
+      <span class="confirm-key">${k}</span>
+      <span class="confirm-val highlight">${esc(v)}</span>
+    </div>`).join('') : '';
 
   document.getElementById('confirmBody').innerHTML = `
     <div class="confirm-row">
@@ -319,11 +417,11 @@ function showConfirm() {
     ${isEmail ? `<div class="confirm-row">
       <span class="confirm-key">New email</span>
       <span class="confirm-val highlight">${esc(newEmail)}</span>
-    </div>` : ''}
-    <div class="confirm-row">
+    </div>` : detailRows}
+    ${notes ? `<div class="confirm-row">
       <span class="confirm-key">Notes</span>
       <span class="confirm-val">${esc(notes)}</span>
-    </div>
+    </div>` : ''}
   `;
   document.getElementById('confirmOverlay').classList.add('active');
 }
@@ -332,9 +430,14 @@ function closeConfirm() {
   document.getElementById('confirmOverlay').classList.remove('active');
 }
 
+function resetForm() {
+  ['currentEmail','newEmail','notes','firstName','lastName','accountName','role','type','mailingCity','mailingCountry','description']
+    .forEach(id => { const el = document.getElementById(id); if (el) el.value = ''; });
+  pendingPayload = null;
+}
+
 async function triggerFlow() {
   closeConfirm();
-  const { oldEmail, newEmail } = pendingPayload;
   const btn = document.querySelector('.submit-btn');
   btn.disabled = true;
   showBanner('Sending to Power Automate...', 'loading');
@@ -343,15 +446,12 @@ async function triggerFlow() {
     const res = await fetch(FLOW_URL, {
       method: 'POST',
       headers: { 'Content-Type': 'application/json' },
-      body: JSON.stringify({ oldEmail, newEmail })
+      body: JSON.stringify(pendingPayload)
     });
 
     if (res.ok || res.status === 202) {
       showBanner('✓ Flow triggered. An approval request has been sent — check your inbox to confirm the change.', 'success');
-      document.getElementById('currentEmail').value = '';
-      document.getElementById('newEmail').value = '';
-      document.getElementById('notes').value = '';
-      pendingPayload = null;
+      resetForm();
     } else {
       showBanner(`✗ Flow returned an error (${res.status}). Please check Power Automate and try again.`, 'error');
     }
